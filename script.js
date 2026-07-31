@@ -14,15 +14,15 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     let isAdvancedView = false;
-    let suppressWarning = false;
+
 
     // --- DOM Elements ---
     const viewTabBtns = document.querySelectorAll('.view-tab-btn');
     const layoutTabBtns = document.querySelectorAll('.layout-tab-btn');
     const simpleView = document.getElementById('simpleView');
     const advancedView = document.getElementById('advancedView');
-    const downgradeWarning = document.getElementById('downgradeWarning');
-    const dismissWarningBtn = document.getElementById('dismissWarningBtn');
+    const simpleBeginWarning = document.getElementById('simpleBegin_Warning');
+    const simpleEndWarning = document.getElementById('simpleEnd_Warning');
     const jsonPayload = document.getElementById('jsonPayload');
 
     const simpleBeginCol = document.getElementById('simpleBeginCol');
@@ -194,8 +194,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (data.begin_from) msg.push(`Earliest: ${data.begin_from}`);
                 if (data.begin_to) msg.push(`Latest: ${data.begin_to}`);
                 simpleBeginFeedback.textContent = `Advanced data available (${msg.join(', ')})`;
+                if (simpleBeginWarning) simpleBeginWarning.classList.remove('d-none');
             } else {
                 simpleBeginFeedback.textContent = "";
+                if (simpleBeginWarning) simpleBeginWarning.classList.add('d-none');
             }
         }
 
@@ -218,8 +220,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (data.end_from) msg.push(`Earliest: ${data.end_from}`);
                 if (data.end_to) msg.push(`Latest: ${data.end_to}`);
                 simpleEndFeedback.textContent = `Advanced data available (${msg.join(', ')})`;
+                if (simpleEndWarning) simpleEndWarning.classList.remove('d-none');
             } else {
                 simpleEndFeedback.textContent = "";
+                if (simpleEndWarning) simpleEndWarning.classList.add('d-none');
             }
         }
     }
@@ -342,7 +346,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (showAdv) {
             simpleView.classList.add('d-none');
             advancedView.classList.remove('d-none');
-            downgradeWarning.classList.add('d-none'); // Hide warning when going to advanced
+
             if (simpleTabBtn && advancedTabBtn) {
                 simpleTabBtn.classList.remove('active');
                 advancedTabBtn.classList.add('active');
@@ -355,10 +359,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 simpleTabBtn.classList.add('active');
             }
             
-            // Check if we are losing data by downgrading manually
-            if (userInitiated && shouldShowAdvancedView(data) && !suppressWarning) {
-                downgradeWarning.classList.remove('d-none');
-            }
+
         }
     }
 
@@ -391,18 +392,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    dismissWarningBtn.addEventListener('click', () => {
-        suppressWarning = true;
-        downgradeWarning.classList.add('d-none');
-    });
+
 
     // --- Preset Buttons ---
     presetBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             const presetKey = btn.getAttribute('data-preset');
             if (presets[presetKey]) {
-                suppressWarning = false; // Reset warning suppression on load
-                downgradeWarning.classList.add('d-none');
                 loadData(presets[presetKey]);
             }
         });

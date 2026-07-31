@@ -78,11 +78,6 @@
                     </ul>
                 </div>
                 <div class="card-body border-top">
-                    <!-- Warning Banner -->
-                    <div id="downgradeWarning" class="alert alert-warning d-none alert-dismissible fade show" role="alert">
-                        <strong>Warning!</strong> Switching might result in loss of precise uncertainty data or asymmetric boundaries.
-                        <button type="button" class="btn-close" aria-label="Close" id="dismissWarningBtn"></button>
-                    </div>
 
                     <form id="dateForm">
                         <div class="mb-3 px-3 py-2 rounded shadow-sm" style="background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%); border: 1px solid #ffe082; border-left: 4px solid #ffb300;">
@@ -105,7 +100,7 @@
                         <div id="simpleView">
                             <div class="row mb-3">
                                 <div class="col-12" id="simpleBeginCol">
-                                    <label class="form-label fw-bold">Begin</label>
+                                    <label class="form-label fw-bold">Begin<span id="simpleBegin_Warning" class="text-danger small ms-2 fw-normal d-none">⚠️ Complex data will be lost</span></label>
                                     <div class="input-group">
                                         <input type="text" class="form-control simple-input" id="simpleBegin_Y" placeholder="YYYY">
                                         <input type="text" class="form-control simple-input" id="simpleBegin_M" placeholder="MM">
@@ -115,7 +110,7 @@
                                     <input type="text" class="form-control form-control-sm mt-1 simple-comment" id="simpleBegin_Comment" placeholder="Begin Comment">
                                 </div>
                                 <div class="col-12 mt-3" id="simpleEndCol">
-                                    <label class="form-label fw-bold">End</label>
+                                    <label class="form-label fw-bold">End<span id="simpleEnd_Warning" class="text-danger small ms-2 fw-normal d-none">⚠️ Complex data will be lost</span></label>
                                     <div class="input-group">
                                         <input type="text" class="form-control simple-input" id="simpleEnd_Y" placeholder="YYYY">
                                         <input type="text" class="form-control simple-input" id="simpleEnd_M" placeholder="MM">
