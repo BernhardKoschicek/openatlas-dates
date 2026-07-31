@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenAtlas Feature #2156 - Date Entry Prototype</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-light">
+
+<div class="container py-5">
+    <header class="mb-4 text-center">
+        <h1 class="display-6 fw-bold">OpenAtlas Feature #2156</h1>
+        <p class="text-muted">Interactive UI Prototype for Date Entries (CIDOC CRM)</p>
+    </header>
+
+    <!-- 1. Interactive Scenario Presets -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-white">
+            <h5 class="mb-0">1. Select a Scenario (Presets)</h5>
+        </div>
+        <div class="card-body">
+            <div class="btn-group w-100 flex-wrap" role="group" aria-label="Scenario Presets">
+                <button type="button" class="btn btn-outline-primary preset-btn m-1" data-preset="exact">
+                    A: Exact Date<br><small>(e.g. Battle of Hastings)</small>
+                </button>
+                <button type="button" class="btn btn-outline-primary preset-btn m-1" data-preset="tpq">
+                    B: Terminus post quem<br><small>(Earliest End)</small>
+                </button>
+                <button type="button" class="btn btn-outline-primary preset-btn m-1" data-preset="taq">
+                    C: Terminus ante quem<br><small>(Latest End)</small>
+                </button>
+                <button type="button" class="btn btn-outline-primary preset-btn m-1" data-preset="a_quo">
+                    D: Terminus a quo<br><small>(Earliest Begin)</small>
+                </button>
+                <button type="button" class="btn btn-outline-primary preset-btn m-1" data-preset="ad_quem">
+                    E: Terminus ad quem<br><small>(Latest Begin)</small>
+                </button>
+                <button type="button" class="btn btn-outline-primary preset-btn m-1" data-preset="timespan">
+                    F: Classic Timespan<br><small>(e.g. Peace of Westphalia)</small>
+                </button>
+                <button type="button" class="btn btn-outline-primary preset-btn m-1" data-preset="timespan_year">
+                    G: Timespan (Years)<br><small>(e.g. 824 to 825)</small>
+                </button>
+                <button type="button" class="btn btn-outline-primary preset-btn m-1" data-preset="timespan_month">
+                    H: Timespan (Months)<br><small>(e.g. Apr to May 2013)</small>
+                </button>
+                <button type="button" class="btn btn-outline-secondary preset-btn m-1" data-preset="clear">
+                    Clear Data
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- 2. The New Dual-Mode User Interface -->
+        <div class="col-lg-8 mx-auto mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white pb-0 border-bottom-0">
+                    <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
+                        <h5 class="mb-0">2. Date Entry UI</h5>
+                    </div>
+                    <ul class="nav nav-tabs border-bottom-0" id="layoutTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active layout-tab-btn" id="tab-stacked" data-layout="stacked" type="button" role="tab">Stacked Layout</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link layout-tab-btn" id="tab-side" data-layout="side" type="button" role="tab">Side-by-Side Layout</button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body border-top">
+                    <!-- Warning Banner -->
+                    <div id="downgradeWarning" class="alert alert-warning d-none alert-dismissible fade show" role="alert">
+                        <strong>Warning!</strong> Switching to Simple View might result in loss of precise uncertainty data or asymmetric boundaries.
+                        <button type="button" class="btn-close" aria-label="Close" id="dismissWarningBtn"></button>
+                    </div>
+
+                    <form id="dateForm">
+                        <div class="d-flex justify-content-end mb-3 pb-2 border-bottom">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" id="viewToggle">
+                                <label class="form-check-label" for="viewToggle">Advanced View</label>
+                            </div>
+                        </div>
+
+                        <!-- Simple View -->
+                        <div id="simpleView">
+                            <p class="text-muted small mb-3">
+                                Simple mode automatically expands partial dates. Format: YYYY, MM, DD.
+                            </p>
+                            <div class="row mb-3">
+                                <div class="col-12" id="simpleBeginCol">
+                                    <label class="form-label fw-bold">Begin</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control simple-input" id="simpleBegin_Y" placeholder="YYYY">
+                                        <input type="text" class="form-control simple-input" id="simpleBegin_M" placeholder="MM">
+                                        <input type="text" class="form-control simple-input" id="simpleBegin_D" placeholder="DD">
+                                    </div>
+                                    <small class="text-primary d-block mt-1 fst-italic" id="simpleBegin_Feedback" style="min-height: 1.2em;"></small>
+                                    <input type="text" class="form-control form-control-sm mt-1 simple-comment" id="simpleBegin_Comment" placeholder="Begin Comment">
+                                </div>
+                                <div class="col-12 mt-3" id="simpleEndCol">
+                                    <label class="form-label fw-bold">End</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control simple-input" id="simpleEnd_Y" placeholder="YYYY">
+                                        <input type="text" class="form-control simple-input" id="simpleEnd_M" placeholder="MM">
+                                        <input type="text" class="form-control simple-input" id="simpleEnd_D" placeholder="DD">
+                                    </div>
+                                    <small class="text-primary d-block mt-1 fst-italic" id="simpleEnd_Feedback" style="min-height: 1.2em;"></small>
+                                    <input type="text" class="form-control form-control-sm mt-1 simple-comment" id="simpleEnd_Comment" placeholder="End Comment">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Advanced View -->
+                        <div id="advancedView" class="d-none mt-3 border-top pt-3">
+                            <p class="text-muted small mb-3">
+                                CIDOC CRM Scientific View. Fill any field independently to create termini.
+                            </p>
+                            
+                            <div class="row mb-3">
+                                <div class="col-12" id="advancedBeginCol">
+                                    <h6 class="text-primary">Begin Boundary</h6>
+                                    <div class="mb-2">
+                                        <label class="form-label small mb-1">Earliest Begin <code>(begin_from)</code></label>
+                                        <div class="input-group input-group-sm">
+                                            <input type="text" class="form-control advanced-input" id="begin_from_Y" placeholder="YYYY">
+                                            <input type="text" class="form-control advanced-input" id="begin_from_M" placeholder="MM">
+                                            <input type="text" class="form-control advanced-input" id="begin_from_D" placeholder="DD">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="form-label small mb-1">Latest Begin <code>(begin_to)</code></label>
+                                        <div class="input-group input-group-sm">
+                                            <input type="text" class="form-control advanced-input" id="begin_to_Y" placeholder="YYYY">
+                                            <input type="text" class="form-control advanced-input" id="begin_to_M" placeholder="MM">
+                                            <input type="text" class="form-control advanced-input" id="begin_to_D" placeholder="DD">
+                                        </div>
+                                    </div>
+                                    <input type="text" class="form-control form-control-sm mt-2 advanced-comment" id="advancedBegin_Comment" placeholder="Begin Boundary Comment">
+                                </div>
+                                <div class="col-12 mt-4" id="advancedEndCol">
+                                    <h6 class="text-danger">End Boundary</h6>
+                                    <div class="mb-2">
+                                        <label class="form-label small mb-1">Earliest End <code>(end_from)</code></label>
+                                        <div class="input-group input-group-sm">
+                                            <input type="text" class="form-control advanced-input" id="end_from_Y" placeholder="YYYY">
+                                            <input type="text" class="form-control advanced-input" id="end_from_M" placeholder="MM">
+                                            <input type="text" class="form-control advanced-input" id="end_from_D" placeholder="DD">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="form-label small mb-1">Latest End <code>(end_to)</code></label>
+                                        <div class="input-group input-group-sm">
+                                            <input type="text" class="form-control advanced-input" id="end_to_Y" placeholder="YYYY">
+                                            <input type="text" class="form-control advanced-input" id="end_to_M" placeholder="MM">
+                                            <input type="text" class="form-control advanced-input" id="end_to_D" placeholder="DD">
+                                        </div>
+                                    </div>
+                                    <input type="text" class="form-control form-control-sm mt-2 advanced-comment" id="advancedEnd_Comment" placeholder="End Boundary Comment">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Direct Comparison Panel -->
+        <div class="col-lg-8 mx-auto mb-4">
+            <div class="card shadow-sm bg-dark text-white">
+                <div class="card-header bg-secondary border-secondary d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 text-white">3. Live Backend Payload</h5>
+                    <span class="badge bg-success">Real-time</span>
+                </div>
+                <div class="card-body font-monospace payload-box">
+                    <pre><code id="jsonPayload" class="text-info">{
+  "begin_from": null,
+  "begin_to": null,
+  "begin_comment": null,
+  "end_from": null,
+  "end_to": null,
+  "end_comment": null
+}</code></pre>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap 5 JS Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
