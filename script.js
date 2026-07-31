@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let suppressWarning = false;
 
     // --- DOM Elements ---
-    const viewToggle = document.getElementById('viewToggle');
+    const viewTabBtns = document.querySelectorAll('.view-tab-btn');
     const layoutTabBtns = document.querySelectorAll('.layout-tab-btn');
     const simpleView = document.getElementById('simpleView');
     const advancedView = document.getElementById('advancedView');
@@ -189,7 +189,14 @@ document.addEventListener('DOMContentLoaded', () => {
              simpleBeginFeedback.textContent = `Expanded to timespan: ${data.begin_from} — ${data.begin_to}`;
         } else {
             clearFields(simpleInputs.begin); // Complex, can't map cleanly
-            simpleBeginFeedback.textContent = "";
+            if (data.begin_from || data.begin_to) {
+                let msg = [];
+                if (data.begin_from) msg.push(`Earliest: ${data.begin_from}`);
+                if (data.begin_to) msg.push(`Latest: ${data.begin_to}`);
+                simpleBeginFeedback.textContent = `Advanced data available (${msg.join(', ')})`;
+            } else {
+                simpleBeginFeedback.textContent = "";
+            }
         }
 
         if (data.end_from === data.end_to && data.end_from !== "") {
@@ -206,7 +213,14 @@ document.addEventListener('DOMContentLoaded', () => {
              simpleEndFeedback.textContent = `Expanded to timespan: ${data.end_from} — ${data.end_to}`;
         } else {
             clearFields(simpleInputs.end); // Complex
-            simpleEndFeedback.textContent = "";
+            if (data.end_from || data.end_to) {
+                let msg = [];
+                if (data.end_from) msg.push(`Earliest: ${data.end_from}`);
+                if (data.end_to) msg.push(`Latest: ${data.end_to}`);
+                simpleEndFeedback.textContent = `Advanced data available (${msg.join(', ')})`;
+            } else {
+                simpleEndFeedback.textContent = "";
+            }
         }
     }
 
@@ -321,15 +335,25 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- View Toggling ---
     function setAdvancedView(showAdv, userInitiated = false) {
         isAdvancedView = showAdv;
-        viewToggle.checked = showAdv;
+        
+        const simpleTabBtn = document.getElementById('tab-simple');
+        const advancedTabBtn = document.getElementById('tab-advanced');
         
         if (showAdv) {
             simpleView.classList.add('d-none');
             advancedView.classList.remove('d-none');
             downgradeWarning.classList.add('d-none'); // Hide warning when going to advanced
+            if (simpleTabBtn && advancedTabBtn) {
+                simpleTabBtn.classList.remove('active');
+                advancedTabBtn.classList.add('active');
+            }
         } else {
             advancedView.classList.add('d-none');
             simpleView.classList.remove('d-none');
+            if (simpleTabBtn && advancedTabBtn) {
+                advancedTabBtn.classList.remove('active');
+                simpleTabBtn.classList.add('active');
+            }
             
             // Check if we are losing data by downgrading manually
             if (userInitiated && shouldShowAdvancedView(data) && !suppressWarning) {
@@ -338,8 +362,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    viewToggle.addEventListener('change', (e) => {
-        setAdvancedView(e.target.checked, true);
+    viewTabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const isAdv = btn.getAttribute('data-view') === 'advanced';
+            if (isAdvancedView !== isAdv) {
+                setAdvancedView(isAdv, true);
+            }
+        });
     });
 
     layoutTabBtns.forEach(btn => {

@@ -12,8 +12,7 @@
 
 <div class="container py-5">
     <header class="mb-4 text-center">
-        <h1 class="display-6 fw-bold">OpenAtlas Feature #2156</h1>
-        <p class="text-muted">Interactive UI Prototype for Date Entries (CIDOC CRM)</p>
+        <h1 class="display-6 fw-bold">OpenAtlas Feature <a href="https://redmine.openatlas.eu/issues/2156" target="_blank">#2156</a></h1>
     </header>
 
     <!-- 1. Interactive Scenario Presets -->
@@ -62,6 +61,13 @@
                     <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
                         <h5 class="mb-0">2. Date Entry UI</h5>
                     </div>
+                    <div class="mb-3 px-3 py-2 rounded shadow-sm" style="background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%); border: 1px solid #ce93d8; border-left: 4px solid #ab47bc;">
+                        <p class="mb-0 small text-dark" style="line-height: 1.5;">
+                            <strong>Layout Modes:</strong><br>
+                            <span class="text-primary fw-bold">Stacked Layout:</span> Displays the Begin and End date sections vertically (one below the other).<br>
+                            <span class="text-success fw-bold">Side-by-Side Layout:</span> Displays the sections horizontally, making it easier to directly compare Begin and End dates.
+                        </p>
+                    </div>
                     <ul class="nav nav-tabs border-bottom-0" id="layoutTabs" role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active layout-tab-btn" id="tab-stacked" data-layout="stacked" type="button" role="tab">Stacked Layout</button>
@@ -74,23 +80,29 @@
                 <div class="card-body border-top">
                     <!-- Warning Banner -->
                     <div id="downgradeWarning" class="alert alert-warning d-none alert-dismissible fade show" role="alert">
-                        <strong>Warning!</strong> Switching to Simple View might result in loss of precise uncertainty data or asymmetric boundaries.
+                        <strong>Warning!</strong> Switching might result in loss of precise uncertainty data or asymmetric boundaries.
                         <button type="button" class="btn-close" aria-label="Close" id="dismissWarningBtn"></button>
                     </div>
 
                     <form id="dateForm">
-                        <div class="d-flex justify-content-end mb-3 pb-2 border-bottom">
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" role="switch" id="viewToggle">
-                                <label class="form-check-label" for="viewToggle">Advanced View</label>
-                            </div>
+                        <div class="mb-3 px-3 py-2 rounded shadow-sm" style="background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%); border: 1px solid #ffe082; border-left: 4px solid #ffb300;">
+                            <p class="mb-0 small text-dark" style="line-height: 1.5;">
+                                <strong>Data Entry Modes:</strong><br>
+                                <span class="fw-bold" style="color: #f57c00;">Simple View:</span> Quick entry for exact dates or timespans. Automatically expands partial years/months.<br>
+                                <span class="fw-bold" style="color: #d84315;">Advanced View:</span> Full precision for asymmetric bounds (Termini). Set earliest and latest limits independently.
+                            </p>
                         </div>
+                        <ul class="nav nav-tabs mb-4" id="viewTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active view-tab-btn" id="tab-simple" data-view="simple" type="button" role="tab" style="font-weight: 500;">Simple View</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link view-tab-btn" id="tab-advanced" data-view="advanced" type="button" role="tab" style="font-weight: 500;">Advanced View</button>
+                            </li>
+                        </ul>
 
                         <!-- Simple View -->
                         <div id="simpleView">
-                            <p class="text-muted small mb-3">
-                                Simple mode automatically expands partial dates. Format: YYYY, MM, DD.
-                            </p>
                             <div class="row mb-3">
                                 <div class="col-12" id="simpleBeginCol">
                                     <label class="form-label fw-bold">Begin</label>
@@ -116,11 +128,8 @@
                         </div>
 
                         <!-- Advanced View -->
-                        <div id="advancedView" class="d-none mt-3 border-top pt-3">
-                            <p class="text-muted small mb-3">
-                                CIDOC CRM Scientific View. Fill any field independently to create termini.
-                            </p>
-                            
+                        <div id="advancedView" class="d-none">
+
                             <div class="row mb-3">
                                 <div class="col-12" id="advancedBeginCol">
                                     <h6 class="text-primary">Begin Boundary</h6>
