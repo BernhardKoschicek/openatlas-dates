@@ -1,66 +1,270 @@
-/* style.css */
+/* ==========================================================================
+   1. Original OpenAtlas Styles (/var/www/openatlas/openatlas/static/css/style.css)
+   ========================================================================== */
+html, body, input, select, textarea {
+    font-family: helvetica, arial, sans-serif;
+}
+
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: #f4f6f9;
+    margin: 0;
 }
 
-.payload-box {
-    background-color: #1e1e1e;
-    border-radius: 4px;
-    padding: 1rem;
-    overflow-x: auto;
+.oa-app-shell {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
 }
 
-code {
-    font-size: 0.95rem;
+.oa-app-shell a {
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.oa-app-shell a:not([href]):not([class]),
+.oa-app-shell a:not([href]):not([class]):hover {
+    color: #0d6efd;
+    cursor: pointer;
+}
+
+.oa-app-shell h1,
+.oa-app-shell h2,
+.oa-app-shell h3 {
+    font-size: 100%;
+}
+
+.oa-app-shell h1 {
+    font-weight: bold;
+    margin: 1em 0;
+    font-size: 1.1em;
+}
+
+img#logo {
+    height: 40px;
+}
+
+#content {
+    font-size: 0.9em;
+    padding-bottom: 1.5rem;
+}
+
+table {
+    --bs-table-bg: inherit !important;
+}
+
+tbody {
+    border-top: 0 solid !important;
+}
+
+td.fit-width {
+    width: 1px;
+    max-width: initial !important;
+}
+
+table.table-no-style tr td {
+    border-bottom-width: 0 !important;
+    padding-top: 0.35rem;
+    padding-bottom: 0.35rem;
+}
+
+.bg-gray {
+    background-color: #e9ecef !important;
+}
+
+.uc-first::first-letter {
+    text-transform: uppercase;
+}
+
+.error {
+    color: #dc3545;
+    font-size: 0.85em;
+}
+
+.tooltipicon {
+    color: #6c757d;
+    cursor: pointer;
+}
+
+.tooltipicon:hover {
+    color: #0d6efd;
+}
+
+/* ==========================================================================
+   2. Prototype Control Bar & Layout
+   ========================================================================== */
+.proto-banner {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    color: #f8fafc;
+    border-bottom: 3px solid #0d6efd;
 }
 
 .preset-btn {
     text-align: left;
-    min-width: 200px;
-    flex: 1 1 auto;
+    font-size: 0.8rem;
+    line-height: 1.25;
+    padding: 0.45rem 0.65rem;
+    border-radius: 5px;
+    transition: none;
 }
 
-/* Smooth transition for views */
-#simpleView, #advancedView {
-    transition: all 0.3s ease-in-out;
+.preset-btn small {
+    display: block;
+    font-size: 0.72rem;
+    opacity: 0.8;
+    font-weight: normal;
 }
 
-/* Subtle highlights for standard inputs */
-.simple-input:focus {
-    border-color: #0d6efd;
-    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-}
-
-.advanced-input:focus {
-    border-color: #0dcaf0;
-    box-shadow: 0 0 0 0.25rem rgba(13, 202, 240, 0.25);
-}
-
-/* Colorful Layout Tabs */
-#tab-stacked {
-    color: #0d6efd;
-    font-weight: 600;
-    transition: all 0.2s;
-}
-#tab-stacked:hover {
-    background-color: #e9ecef;
-}
-#tab-stacked.active {
+.preset-btn.active {
     background-color: #0d6efd !important;
     color: #ffffff !important;
     border-color: #0d6efd !important;
+    box-shadow: 0 2px 6px rgba(13, 110, 253, 0.35);
 }
 
-#tab-side {
-    color: #198754;
+.proposal-card-btn {
+    text-align: left;
+    border: 1px solid #ced4da;
+    background: #ffffff;
+    border-radius: 6px;
+    padding: 0.55rem 0.75rem;
+    cursor: pointer;
+    position: relative;
+}
+
+.proposal-card-btn:hover {
+    border-color: #0d6efd;
+    background-color: #f8faff;
+}
+
+.proposal-card-btn.active {
+    border: 2px solid #0d6efd;
+    background-color: #eef5ff;
+    box-shadow: 0 2px 8px rgba(13, 110, 253, 0.15);
+}
+
+.proposal-card-btn .proposal-title {
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: #1e293b;
+}
+
+.proposal-card-btn.active .proposal-title {
+    color: #0a58ca;
+}
+
+.proposal-card-btn .proposal-desc {
+    font-size: 0.75rem;
+    color: #64748b;
+    margin-top: 2px;
+    line-height: 1.3;
+}
+
+/* ==========================================================================
+   3. Date UI Variant Specific Styles
+   ========================================================================== */
+.oa-date-box {
+    background-color: #fbfcfd;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    padding: 0.65rem 0.75rem;
+}
+
+.oa-input-prefix {
+    font-size: 0.75rem;
     font-weight: 600;
-    transition: all 0.2s;
-}
-#tab-side:hover {
+    min-width: 64px;
+    justify-content: center;
     background-color: #e9ecef;
+    color: #495057;
 }
-#tab-side.active {
-    background-color: #198754 !important;
-    color: #ffffff !important;
-    border-color: #198754 !important;
+
+.oa-input-prefix.prefix-from {
+    background-color: #e7f1ff;
+    color: #084298;
+    border-color: #b6d4fe;
+}
+
+.oa-input-prefix.prefix-to {
+    background-color: #fff3cd;
+    color: #664d03;
+    border-color: #ffecb5;
+}
+
+.live-expansion-badge {
+    font-size: 0.75rem;
+    font-weight: normal;
+    padding: 0.2em 0.55em;
+    background-color: #eef5ff;
+    color: #0a58ca;
+    border: 1px solid #b6d4fe;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.live-expansion-badge.badge-asymmetric {
+    background-color: #fff3cd;
+    color: #664d03;
+    border-color: #ffecb5;
+}
+
+/* Visual Mini-Timeline (Proposal 5) */
+.timeline-track {
+    position: relative;
+    height: 34px;
+    background: #e9ecef;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid #ced4da;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+}
+
+.timeline-bar {
+    height: 12px;
+    border-radius: 6px;
+    background: linear-gradient(90deg, #0d6efd 0%, #198754 100%);
+    transition: all 0.25s ease;
+    position: relative;
+}
+
+.timeline-bar.open-left {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    background: linear-gradient(90deg, rgba(13, 110, 253, 0.1) 0%, #0d6efd 45%, #198754 100%);
+    border-left: 2px dashed #0d6efd;
+}
+
+.timeline-bar.open-right {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    background: linear-gradient(90deg, #0d6efd 0%, #198754 55%, rgba(25, 135, 84, 0.1) 100%);
+    border-right: 2px dashed #198754;
+}
+
+/* ==========================================================================
+   4. Inspector / Payload Panel
+   ========================================================================== */
+.payload-box {
+    background-color: #0f172a;
+    border-radius: 6px;
+    padding: 0.85rem 1rem;
+    overflow-x: auto;
+    font-size: 0.82rem;
+    line-height: 1.45;
+}
+
+.oa-detail-preview-table td {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.85rem;
+}
+
+.oa-detail-preview-table td:first-child {
+    font-weight: bold;
+    color: #495057;
+    width: 1%;
+    white-space: nowrap;
+    padding-right: 1rem;
 }

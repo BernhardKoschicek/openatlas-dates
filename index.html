@@ -3,200 +3,413 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenAtlas Feature #2156 - Date Entry Prototype</title>
-    <!-- Bootstrap 5 CSS -->
+    <title>OpenAtlas Feature #2156 - Date Entry UI Proposals</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <!-- Bootstrap 5.3 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome 6 (used in OpenAtlas) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-light">
+<body>
 
-<div class="container py-5">
-    <header class="mb-4 text-center">
-        <h1 class="display-6 fw-bold">OpenAtlas Feature <a href="https://redmine.openatlas.eu/issues/2156" target="_blank">#2156</a></h1>
-    </header>
-
-    <!-- 1. Interactive Scenario Presets -->
-    <div class="card mb-4 shadow-sm">
-        <div class="card-header bg-white">
-            <h5 class="mb-0">1. Select a Scenario (Presets)</h5>
-        </div>
-        <div class="card-body">
-            <div class="btn-group w-100 flex-wrap" role="group" aria-label="Scenario Presets">
-                <button type="button" class="btn btn-outline-primary preset-btn m-1" data-preset="exact">
-                    A: Exact Date<br><small>(e.g. Battle of Hastings)</small>
-                </button>
-                <button type="button" class="btn btn-outline-primary preset-btn m-1" data-preset="tpq">
-                    B: Terminus post quem<br><small>(Earliest End)</small>
-                </button>
-                <button type="button" class="btn btn-outline-primary preset-btn m-1" data-preset="taq">
-                    C: Terminus ante quem<br><small>(Latest End)</small>
-                </button>
-                <button type="button" class="btn btn-outline-primary preset-btn m-1" data-preset="a_quo">
-                    D: Terminus a quo<br><small>(Earliest Begin)</small>
-                </button>
-                <button type="button" class="btn btn-outline-primary preset-btn m-1" data-preset="ad_quem">
-                    E: Terminus ad quem<br><small>(Latest Begin)</small>
-                </button>
-                <button type="button" class="btn btn-outline-primary preset-btn m-1" data-preset="timespan">
-                    F: Classic Timespan<br><small>(e.g. Peace of Westphalia)</small>
-                </button>
-                <button type="button" class="btn btn-outline-primary preset-btn m-1" data-preset="timespan_year">
-                    G: Timespan (Years)<br><small>(e.g. 824 to 825)</small>
-                </button>
-                <button type="button" class="btn btn-outline-primary preset-btn m-1" data-preset="timespan_month">
-                    H: Timespan (Months)<br><small>(e.g. Apr to May 2013)</small>
-                </button>
-                <button type="button" class="btn btn-outline-secondary preset-btn m-1" data-preset="clear">
-                    Clear Data
+<!-- =========================================================================
+     TOP PROTOTYPE CONTROL PANEL (Scenario Presets & UI Concept Switcher)
+     ========================================================================= -->
+<div class="proto-banner py-3 mb-4 shadow-sm">
+    <div class="container-fluid px-4">
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+            <div>
+                <span class="badge bg-primary me-2">Feature #2156</span>
+                <strong class="fs-5">OpenAtlas Date Entry — Interactive UI Prototype</strong>
+                <a href="https://redmine.openatlas.eu/issues/2156" target="_blank" class="text-info ms-2 small text-decoration-none">
+                    <i class="fas fa-external-link-alt"></i> Redmine #2156
+                </a>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <div class="form-check form-switch mb-0">
+                    <input class="form-check-input" type="checkbox" role="switch" id="toggleTimeFields">
+                    <label class="form-check-label small text-light" for="toggleTimeFields">
+                        <i class="far fa-clock me-1"></i>Show Time Fields <code>(hh:mm:ss)</code>
+                    </label>
+                </div>
+                <button class="btn btn-sm btn-outline-light" type="button" data-bs-toggle="collapse" data-bs-target="#presetCollapse" aria-expanded="true">
+                    <i class="fas fa-sliders-h me-1"></i>Toggle Controls
                 </button>
             </div>
         </div>
-    </div>
 
-    <div class="row">
-        <!-- 2. The New Dual-Mode User Interface -->
-        <div class="col-lg-8 mx-auto mb-4">
-            <div class="card shadow-sm">
-                <div class="card-header bg-white pb-0 border-bottom-0">
-                    <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
-                        <h5 class="mb-0">2. Date Entry UI</h5>
-                    </div>
-                    <div class="mb-3 px-3 py-2 rounded shadow-sm" style="background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%); border: 1px solid #ce93d8; border-left: 4px solid #ab47bc;">
-                        <p class="mb-0 small text-dark" style="line-height: 1.5;">
-                            <strong>Layout Modes:</strong><br>
-                            <span class="text-primary fw-bold">Stacked Layout:</span> Displays the Begin and End date sections vertically (one below the other).<br>
-                            <span class="text-success fw-bold">Side-by-Side Layout:</span> Displays the sections horizontally, making it easier to directly compare Begin and End dates.
-                        </p>
-                    </div>
-                    <ul class="nav nav-tabs border-bottom-0" id="layoutTabs" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active layout-tab-btn" id="tab-stacked" data-layout="stacked" type="button" role="tab">Stacked Layout</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link layout-tab-btn" id="tab-side" data-layout="side" type="button" role="tab">Side-by-Side Layout</button>
-                        </li>
-                    </ul>
+        <div class="collapse show" id="presetCollapse">
+            <!-- 1. Scenarios from Ticket #2156 -->
+            <div class="bg-white text-dark rounded p-3 mb-3 shadow-sm">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6 class="mb-0 fw-bold text-uppercase small text-secondary">
+                        <i class="fas fa-flask me-1 text-primary"></i>1. Select Historical Scenario (Stefan Eichert's Examples from #2156)
+                    </h6>
+                    <span id="activeScenarioDescription" class="small text-primary fw-semibold"></span>
                 </div>
-                <div class="card-body border-top">
-
-                    <form id="dateForm">
-                        <div class="mb-3 px-3 py-2 rounded shadow-sm" style="background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%); border: 1px solid #ffe082; border-left: 4px solid #ffb300;">
-                            <p class="mb-0 small text-dark" style="line-height: 1.5;">
-                                <strong>Data Entry Modes:</strong><br>
-                                <span class="fw-bold" style="color: #f57c00;">Simple View:</span> Quick entry for exact dates or timespans. Automatically expands partial years/months.<br>
-                                <span class="fw-bold" style="color: #d84315;">Advanced View:</span> Full precision for asymmetric bounds (Termini). Set earliest and latest limits independently.
-                            </p>
-                        </div>
-                        <ul class="nav nav-tabs mb-4" id="viewTabs" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active view-tab-btn" id="tab-simple" data-view="simple" type="button" role="tab" style="font-weight: 500;">Simple View</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link view-tab-btn" id="tab-advanced" data-view="advanced" type="button" role="tab" style="font-weight: 500;">Advanced View</button>
-                            </li>
-                        </ul>
-
-                        <!-- Simple View -->
-                        <div id="simpleView">
-                            <div class="row mb-3">
-                                <div class="col-12" id="simpleBeginCol">
-                                    <label class="form-label fw-bold">Begin<span id="simpleBegin_Warning" class="text-danger small ms-2 fw-normal d-none">⚠️ Complex data will be lost</span></label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control simple-input" id="simpleBegin_Y" placeholder="YYYY">
-                                        <input type="text" class="form-control simple-input" id="simpleBegin_M" placeholder="MM">
-                                        <input type="text" class="form-control simple-input" id="simpleBegin_D" placeholder="DD">
-                                    </div>
-                                    <small class="text-primary d-block mt-1 fst-italic" id="simpleBegin_Feedback" style="min-height: 1.2em;"></small>
-                                    <input type="text" class="form-control form-control-sm mt-1 simple-comment" id="simpleBegin_Comment" placeholder="Begin Comment">
-                                </div>
-                                <div class="col-12 mt-3" id="simpleEndCol">
-                                    <label class="form-label fw-bold">End<span id="simpleEnd_Warning" class="text-danger small ms-2 fw-normal d-none">⚠️ Complex data will be lost</span></label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control simple-input" id="simpleEnd_Y" placeholder="YYYY">
-                                        <input type="text" class="form-control simple-input" id="simpleEnd_M" placeholder="MM">
-                                        <input type="text" class="form-control simple-input" id="simpleEnd_D" placeholder="DD">
-                                    </div>
-                                    <small class="text-primary d-block mt-1 fst-italic" id="simpleEnd_Feedback" style="min-height: 1.2em;"></small>
-                                    <input type="text" class="form-control form-control-sm mt-1 simple-comment" id="simpleEnd_Comment" placeholder="End Comment">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Advanced View -->
-                        <div id="advancedView" class="d-none">
-
-                            <div class="row mb-3">
-                                <div class="col-12" id="advancedBeginCol">
-                                    <h6 class="text-primary">Begin Boundary</h6>
-                                    <div class="mb-2">
-                                        <label class="form-label small mb-1">Earliest Begin <code>(begin_from)</code></label>
-                                        <div class="input-group input-group-sm">
-                                            <input type="text" class="form-control advanced-input" id="begin_from_Y" placeholder="YYYY">
-                                            <input type="text" class="form-control advanced-input" id="begin_from_M" placeholder="MM">
-                                            <input type="text" class="form-control advanced-input" id="begin_from_D" placeholder="DD">
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label class="form-label small mb-1">Latest Begin <code>(begin_to)</code></label>
-                                        <div class="input-group input-group-sm">
-                                            <input type="text" class="form-control advanced-input" id="begin_to_Y" placeholder="YYYY">
-                                            <input type="text" class="form-control advanced-input" id="begin_to_M" placeholder="MM">
-                                            <input type="text" class="form-control advanced-input" id="begin_to_D" placeholder="DD">
-                                        </div>
-                                    </div>
-                                    <input type="text" class="form-control form-control-sm mt-2 advanced-comment" id="advancedBegin_Comment" placeholder="Begin Boundary Comment">
-                                </div>
-                                <div class="col-12 mt-4" id="advancedEndCol">
-                                    <h6 class="text-danger">End Boundary</h6>
-                                    <div class="mb-2">
-                                        <label class="form-label small mb-1">Earliest End <code>(end_from)</code></label>
-                                        <div class="input-group input-group-sm">
-                                            <input type="text" class="form-control advanced-input" id="end_from_Y" placeholder="YYYY">
-                                            <input type="text" class="form-control advanced-input" id="end_from_M" placeholder="MM">
-                                            <input type="text" class="form-control advanced-input" id="end_from_D" placeholder="DD">
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label class="form-label small mb-1">Latest End <code>(end_to)</code></label>
-                                        <div class="input-group input-group-sm">
-                                            <input type="text" class="form-control advanced-input" id="end_to_Y" placeholder="YYYY">
-                                            <input type="text" class="form-control advanced-input" id="end_to_M" placeholder="MM">
-                                            <input type="text" class="form-control advanced-input" id="end_to_D" placeholder="DD">
-                                        </div>
-                                    </div>
-                                    <input type="text" class="form-control form-control-sm mt-2 advanced-comment" id="advancedEnd_Comment" placeholder="End Boundary Comment">
-                                </div>
-                            </div>
-                        </div>
-                    </form>
+                <div class="d-flex flex-wrap gap-1" id="presetButtonGroup">
+                    <button type="button" class="btn btn-outline-primary preset-btn" data-preset="exact_day">
+                        <strong>A: Exact Dates (1 Day)</strong>
+                        <small>Born 12.11.1650, Died 07.05.1909</small>
+                    </button>
+                    <button type="button" class="btn btn-outline-primary preset-btn" data-preset="tpq_begin">
+                        <strong>B: TPQ Begin (Earliest Begin)</strong>
+                        <small>Coin 337 AD in grave (≥ 01.01.0337)</small>
+                    </button>
+                    <button type="button" class="btn btn-outline-primary preset-btn" data-preset="tpq_end">
+                        <strong>C: TPQ End (Earliest End)</strong>
+                        <small>Last witness Feb 945 (≥ 01.02.0945)</small>
+                    </button>
+                    <button type="button" class="btn btn-outline-primary preset-btn" data-preset="taq_begin">
+                        <strong>D: TAQ Begin (Latest Begin)</strong>
+                        <small>First charter 15.08.1348 (≤ 15.08.1348)</small>
+                    </button>
+                    <button type="button" class="btn btn-outline-primary preset-btn" data-preset="taq_end">
+                        <strong>E: TAQ End (Latest End)</strong>
+                        <small>Vesuvius eruption (≤ 24.08.0079)</small>
+                    </button>
+                    <button type="button" class="btn btn-outline-primary preset-btn" data-preset="window_years">
+                        <strong>F: Monastery Founding (Years)</strong>
+                        <small>Begin: 820 to 825 AD</small>
+                    </button>
+                    <button type="button" class="btn btn-outline-primary preset-btn" data-preset="window_months">
+                        <strong>G: Fortress Siege (Months)</strong>
+                        <small>End: June to August 1480</small>
+                    </button>
+                    <button type="button" class="btn btn-outline-primary preset-btn" data-preset="mixed_charter">
+                        <strong>H: Mixed Exact + TPQ (#17)</strong>
+                        <small>Born 01.01.800, Died ≥ 23.12.840</small>
+                    </button>
+                    <button type="button" class="btn btn-outline-primary preset-btn" data-preset="single_year_auto">
+                        <strong>I: Year Autocomplete</strong>
+                        <small>Begin: 800, End: 850 (Full years)</small>
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary preset-btn" data-preset="clear">
+                        <strong><i class="fas fa-eraser me-1"></i>Clear</strong>
+                        <small>Empty all fields</small>
+                    </button>
                 </div>
             </div>
-        </div>
 
-        <!-- 3. Direct Comparison Panel -->
-        <div class="col-lg-8 mx-auto mb-4">
-            <div class="card shadow-sm bg-dark text-white">
-                <div class="card-header bg-secondary border-secondary d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0 text-white">3. Live Backend Payload</h5>
-                    <span class="badge bg-success">Real-time</span>
-                </div>
-                <div class="card-body font-monospace payload-box">
-                    <pre><code id="jsonPayload" class="text-info">{
-  "begin_from": null,
-  "begin_to": null,
-  "begin_comment": null,
-  "end_from": null,
-  "end_to": null,
-  "end_comment": null
-}</code></pre>
+            <!-- 2. UI Proposals Switcher -->
+            <div class="bg-white text-dark rounded p-3 shadow-sm">
+                <div class="d-flex flex-wrap justify-content-between align-items-center mb-2 gap-2">
+                    <h6 class="mb-0 fw-bold text-uppercase small text-secondary">
+                        <i class="fas fa-layer-group me-1 text-primary"></i>2. Choose UI Concept / Proposal
+                    </h6>
+                    <!-- Sub-options dynamically shown depending on selected proposal -->
+                    <div id="subOptionsContainer" class="d-flex flex-wrap align-items-center gap-2">
+                        <!-- Proposal 1 sub-options -->
+                        <div id="subOpt_p1" class="btn-group btn-group-sm d-none" role="group">
+                            <input type="radio" class="btn-check" name="p1_style" id="p1_exact" value="exact" checked>
+                            <label class="btn btn-outline-secondary" for="p1_exact">1a: 100% Unchanged</label>
+                            <input type="radio" class="btn-check" name="p1_style" id="p1_badges" value="badges">
+                            <label class="btn btn-outline-secondary" for="p1_badges">1b: + "From/To" Prefix &amp; Hint</label>
+                        </div>
+                        <!-- Proposal 2 sub-options -->
+                        <div id="subOpt_p2" class="d-flex flex-wrap gap-2">
+                            <div class="btn-group btn-group-sm" role="group" aria-label="Control Style">
+                                <input type="radio" class="btn-check" name="p2_control" id="p2_ctrl_tabs" value="tabs" checked>
+                                <label class="btn btn-outline-primary" for="p2_ctrl_tabs">Tabs</label>
+                                <input type="radio" class="btn-check" name="p2_control" id="p2_ctrl_switch" value="switch">
+                                <label class="btn btn-outline-primary" for="p2_ctrl_switch">Bootstrap Switch</label>
+                                <input type="radio" class="btn-check" name="p2_control" id="p2_ctrl_pills" value="pills">
+                                <label class="btn btn-outline-primary" for="p2_ctrl_pills">Segmented Buttons</label>
+                            </div>
+                            <div class="btn-group btn-group-sm" role="group" aria-label="Layout Orientation">
+                                <input type="radio" class="btn-check" name="p2_layout" id="p2_lay_stacked" value="stacked" checked>
+                                <label class="btn btn-outline-secondary" for="p2_lay_stacked"><i class="fas fa-bars me-1"></i>Stacked</label>
+                                <input type="radio" class="btn-check" name="p2_layout" id="p2_lay_side" value="side">
+                                <label class="btn btn-outline-secondary" for="p2_lay_side"><i class="fas fa-columns me-1"></i>Side-by-Side</label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
+                <div class="row g-2" id="proposalSelector">
+                    <div class="col-md-4 col-xl">
+                        <div class="proposal-card-btn h-100" data-proposal="p1">
+                            <div class="proposal-title">1. Keep Current UI (Status Quo)</div>
+                            <div class="proposal-desc">Keeps all 4 rows exactly as in OpenAtlas today (or with subtle <code>Earliest/Latest</code> prefixes).</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-xl">
+                        <div class="proposal-card-btn h-100" data-proposal="p2">
+                            <div class="proposal-title">2. Dual-Mode (Simple / Advanced)</div>
+                            <div class="proposal-desc">Bernhard's concept (#31): Simple 1-row auto-span mode + Advanced 4-row mode via Tabs or Switch.</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-xl">
+                        <div class="proposal-card-btn h-100" data-proposal="p3">
+                            <span class="badge bg-warning text-dark float-end" style="font-size:0.65rem;">New Element</span>
+                            <div class="proposal-title">3. Precision Dropdown (Intent UI)</div>
+                            <div class="proposal-desc">Explicit mode select (<em>Exact / Between / After TPQ / Before TAQ</em>) — immediately signals the new logic!</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-xl">
+                        <div class="proposal-card-btn h-100" data-proposal="p4">
+                            <span class="badge bg-info text-dark float-end" style="font-size:0.65rem;">Per-Row Split</span>
+                            <div class="proposal-title">4. Inline Split-Toggle (<code>± Span</code>)</div>
+                            <div class="proposal-desc">Starts with 1 row each; click <code>[± Time span]</code> on Begin or End individually to split into Earliest/Latest.</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-xl">
+                        <div class="proposal-card-btn h-100" data-proposal="p5">
+                            <span class="badge bg-success float-end" style="font-size:0.65rem;">Visual</span>
+                            <div class="proposal-title">5. Compact Cards + Mini-Timeline</div>
+                            <div class="proposal-desc">Side-by-side boundary cards with an interactive visual interval bar showing open/closed limits.</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Bootstrap 5 JS Bundle with Popper -->
+<!-- =========================================================================
+     MAIN WORKSPACE: AUTHENTIC OPENATLAS FORM + LIVE INSPECTOR
+     ========================================================================= -->
+<div class="container-fluid px-4 pb-5">
+    <div class="row g-4">
+
+        <!-- LEFT COLUMN: Authentic OpenAtlas Application Window -->
+        <div class="col-xl-8">
+            <div class="oa-app-shell">
+                <!-- OpenAtlas Top Navbar (from layout.html) -->
+                <nav class="navbar navbar-expand-md navbar-light bg-light border-bottom px-2">
+                    <div class="container-fluid">
+                        <a class="navbar-brand" href="#!"><img src="logo.png" id="logo" alt="OpenAtlas Logo"></a>
+                        <div class="collapse navbar-collapse">
+                            <div class="navbar-nav me-auto mb-2 mb-md-0">
+                                <a class="nav-item nav-link fw-bold" href="#!">Source</a>
+                                <a class="nav-item nav-link fw-bold" href="#!">Event</a>
+                                <a class="nav-item nav-link fw-bold active" href="#!">Actor</a>
+                                <a class="nav-item nav-link fw-bold" href="#!">Place</a>
+                                <a class="nav-item nav-link fw-bold" href="#!">Item</a>
+                                <a class="nav-item nav-link fw-bold" href="#!">Reference</a>
+                                <a class="nav-item nav-link fw-bold" href="#!">Type</a>
+                                <a class="nav-item nav-link fw-bold" href="#!">File</a>
+                            </div>
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="d-inline-flex align-items-center">
+                                    <input type="text" class="form-control form-control-sm" placeholder="Search term" style="width: 140px;">
+                                    <button class="btn btn-sm btn-link text-secondary" type="button"><i class="fas fa-search fs-5"></i></button>
+                                </div>
+                                <button class="btn btn-light btn-sm" type="button" title="Language"><i class="fa fa-language fs-5 text-secondary"></i></button>
+                                <button class="btn btn-light btn-sm" type="button" title="Settings"><i class="fa fa-cog fs-5 text-secondary"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+
+                <!-- OpenAtlas Gray Breadcrumb Bar (from layout.html) -->
+                <nav aria-label="breadcrumb" class="d-flex justify-content-between p-3 mb-3 bg-gray">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="#!">Actor</a></li>
+                        <li class="breadcrumb-item"><a href="#!">Person</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Insert</li>
+                    </ol>
+                    <div class="small">
+                        OpenAtlas <a href="#!">9.5.0</a>
+                    </div>
+                </nav>
+
+                <!-- OpenAtlas Main Content Area (#content) -->
+                <main>
+                    <div id="content">
+                        <div class="container-fluid">
+                            <form id="oaEntityForm" onsubmit="return false;">
+                                <table class="table table-no-style">
+                                    <tbody>
+                                        <!-- Standard Row: Name * -->
+                                        <tr class="table-row">
+                                            <td class="text-nowrap fit-width">
+                                                <div style="height:31px" class="d-flex align-items-center justify-content-end text-end">
+                                                    <label class="uc-first" for="entity_name">Name *</label>
+                                                    <div class="ms-1">
+                                                        <span data-bs-toggle="tooltip" data-bs-title="Name or title of the entity">
+                                                            <i class="fas fa-info-circle fs-6 tooltipicon"></i>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="align-middle">
+                                                <input type="text" id="entity_name" class="form-control form-control-sm required" value="Historical Record (Example)">
+                                            </td>
+                                        </tr>
+
+                                        <!-- Standard Row: Alias -->
+                                        <tr class="table-row">
+                                            <td class="text-nowrap fit-width">
+                                                <div style="height:31px" class="d-flex align-items-center justify-content-end text-end">
+                                                    <label class="uc-first">Alias</label>
+                                                    <div class="ms-1">
+                                                        <span data-bs-toggle="tooltip" data-bs-title="Alternative names for this entity">
+                                                            <i class="fas fa-info-circle fs-6 tooltipicon"></i>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="align-middle">
+                                                <div class="d-flex gap-1" style="max-width: 360px;">
+                                                    <input type="text" class="form-control form-control-sm" placeholder="">
+                                                    <button type="button" class="btn btn-outline-primary btn-sm"><i class="fas fa-plus"></i></button>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <!-- =======================================================
+                                             OPENATLAS DATE HEADER ROW (util/dates.html)
+                                             ======================================================= -->
+                                        <tr>
+                                            <td class="fit-width pt-3 text-end">
+                                                <div style="height:31px" class="d-flex align-items-center justify-content-end text-end">
+                                                    <label class="uc-first">Date</label>
+                                                    <div class="ms-1">
+                                                        <span data-bs-toggle="tooltip" data-bs-title="Dates for begin and end. Supports exact dates, time spans, and single earliest/latest boundaries (termini post/ante quem).">
+                                                            <i class="fas fa-info-circle fs-6 tooltipicon"></i>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="date-switcher pt-3 align-middle">
+                                                <div class="d-flex flex-wrap align-items-center gap-3">
+                                                    <button type="button" id="date-switcher" class="btn btn-outline-secondary btn-sm">Hide</button>
+                                                    <!-- Dynamic header controls injected by active proposal (e.g. Simple/Advanced Switch) -->
+                                                    <div id="oaDateHeaderControls" class="d-flex align-items-center gap-2"></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <!-- =======================================================
+                                             DYNAMIC DATE ROWS CONTAINER (populated per Proposal)
+                                             ======================================================= -->
+                                    </tbody>
+                                    <tbody id="oaDateRowsContainer" class="date-switch">
+                                        <!-- Rendered dynamically by script.js -->
+                                    </tbody>
+                                    <tbody>
+                                        <!-- Validation Error Banner Row -->
+                                        <tr id="validationErrorRow" class="d-none date-switch">
+                                            <td class="fit-width"></td>
+                                            <td>
+                                                <div class="error fw-bold" id="validationErrorMessage"></div>
+                                            </td>
+                                        </tr>
+
+                                        <!-- Standard Row: Description -->
+                                        <tr class="table-row">
+                                            <td class="text-nowrap fit-width">
+                                                <div style="height:31px" class="d-flex align-items-center justify-content-end text-end">
+                                                    <label class="uc-first" for="entity_desc">Description</label>
+                                                </div>
+                                            </td>
+                                            <td class="align-middle">
+                                                <textarea id="entity_desc" class="form-control form-control-sm" rows="3" placeholder="Historical context or source notes..."></textarea>
+                                            </td>
+                                        </tr>
+
+                                        <!-- Standard Row: Save Buttons -->
+                                        <tr class="table-row">
+                                            <td class="text-nowrap fit-width"></td>
+                                            <td class="align-middle pt-2">
+                                                <div class="row g-1 align-items-center">
+                                                    <div class="col-auto">
+                                                        <a href="#!" class="manual me-1" title="Manual"><i class="fas fs-4 fa-book text-primary"></i></a>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <button type="button" class="btn btn-outline-primary btn-sm">Save</button>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <button type="button" class="btn btn-outline-primary btn-sm">Insert and continue</button>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </form>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN: Live OpenAtlas Display & Database Payload Inspector -->
+        <div class="col-xl-4">
+            <!-- 1. OpenAtlas Detail View Preview -->
+            <div class="card shadow-sm mb-3 border-0">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center py-2">
+                    <h6 class="mb-0 fw-bold"><i class="fas fa-eye text-primary me-2"></i>OpenAtlas Detail View Output</h6>
+                    <span class="badge bg-light text-secondary border">format_entity_date()</span>
+                </div>
+                <div class="card-body py-2 px-3">
+                    <p class="text-muted small mb-2">How this entity's dates will be displayed on the OpenAtlas entity profile &amp; tables:</p>
+                    <table class="table table-sm table-borderless mb-1 oa-detail-preview-table">
+                        <tbody>
+                            <tr>
+                                <td>Begin</td>
+                                <td id="previewDetailBegin" class="text-dark">—</td>
+                            </tr>
+                            <tr>
+                                <td>End</td>
+                                <td id="previewDetailEnd" class="text-dark">—</td>
+                            </tr>
+                            <tr class="border-top">
+                                <td>Table columns</td>
+                                <td>
+                                    <span class="badge bg-gray text-dark me-1">First: <strong id="previewTableFirst">—</strong></span>
+                                    <span class="badge bg-gray text-dark">Last: <strong id="previewTableLast">—</strong></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 2. Load Heuristic & Validation Check -->
+            <div class="card shadow-sm mb-3 border-0">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center py-2">
+                    <h6 class="mb-0 fw-bold"><i class="fas fa-shield-alt text-success me-2"></i>Heuristic &amp; Integrity Status</h6>
+                </div>
+                <div class="card-body py-2 px-3 small">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="text-muted">Form Validation:</span>
+                        <span id="statusValidationBadge" class="badge bg-success">Valid</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="text-muted"><code>should_show_advanced_view()</code>:</span>
+                        <span id="statusHeuristicBadge" class="badge bg-secondary">False (Simple)</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted">Semantics Detected:</span>
+                        <span id="statusSemanticsText" class="fw-semibold text-dark">No dates entered</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Live Database / API Payload -->
+            <div class="card shadow-sm border-0 bg-dark text-white">
+                <div class="card-header bg-transparent border-secondary d-flex justify-content-between align-items-center py-2">
+                    <h6 class="mb-0 text-white"><i class="fas fa-database text-info me-2"></i>3. Saved Database / API Payload</h6>
+                    <span class="badge bg-success">Real-time</span>
+                </div>
+                <div class="card-body p-2">
+                    <div class="payload-box">
+                        <pre class="mb-0"><code id="jsonPayload" class="text-info"></code></pre>
+                    </div>
+                    <div class="px-2 pt-2 small text-white-50" style="font-size: 0.75rem;">
+                        <i class="fas fa-info-circle me-1"></i>Note (#36): OpenAtlas always stores hours, minutes and seconds (<code>00:00:00</code> for <code>_from</code> and <code>23:59:59</code> for <code>_to</code>).
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Bootstrap 5 JS Bundle -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="script.js"></script>
 </body>
